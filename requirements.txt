@@ -9,3 +9,4 @@ Flask-WTF==0.9.5
 simple-pbkdf2==1.0
 gunicorn==19.4
 pip==8.1.1
+psycopg2==2.6.1
