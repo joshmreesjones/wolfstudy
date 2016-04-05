@@ -29,6 +29,12 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
+    @classmethod
+    def init_app(app):
+        import logging, sys
+        app.logger.addHandler(logging.StreamHandler(sys.stdout))
+        app.logger.setLevel(logging.CRITICAL) # Handle all errors
+
 config = {
     'development': DevelopmentConfig,
     'production': ProductionConfig,
