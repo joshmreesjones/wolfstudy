@@ -16,10 +16,10 @@
 
     <hr>
 
-    {% if session.logged_in %}
-        {% set action %}/question/{{ question.id }}/answer/{% endset %}
+    {% if current_user.is_authenticated %}
+        {% set action %}{{ url_for('main.answer_question', question_id=question.id) }}{% endset %}
         {{ wtf.quick_form(form, action=action) }}
     {% else %}
-        <p><a href="/login/">Log in</a> or <a href="/register/">register</a> to answer this question.</p>
+        <p><a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to answer this question.</p>
     {% endif %}
 {% endblock %}

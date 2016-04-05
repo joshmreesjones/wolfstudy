@@ -1,9 +1,11 @@
 Flask==0.10.1
 Flask-Bootstrap==3.3.5.7
+Flask-Login==0.3.2
+Flask-Mail==0.9.1
 Flask-Migrate==1.8.0
 Flask-SQLAlchemy==2.1
 Flask-Script==2.0.5
 Flask-WTF==0.9.5
 simple-pbkdf2==1.0
 gunicorn==19.4
-pip==8.1.0
+pip==8.1.1

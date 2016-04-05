@@ -1,5 +1,8 @@
-from . import db
+from flask import current_app
+from flask.ext.login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
+from . import db, login_manager
 
 MAX_QUESTION_TITLE_LENGTH = 200
 MAX_USERNAME_LENGTH = 30
@@ -34,19 +37,64 @@ class Answer(db.Model):
         self.question_id = question.id
         self.question = question
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
 
-    username = db.Column(db.String(MAX_USERNAME_LENGTH), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(MAX_USERNAME_LENGTH))
     email = db.Column(db.String(MAX_EMAIL_LENGTH), unique=True)
     password_hash = db.Column(db.String(HASH_LENGTH))
+    confirmed = db.Column(db.Boolean, default=False)
+
+    @property
+    def password(self):
+        raise AttributeError('password is not a readable attribute')
+
+    @password.setter
+    def password(self, password):
+        method = 'pbkdf2:sha1:' + str(HASH_ITERATIONS)
+        self.password_hash = generate_password_hash(password, method=method, salt_length=SALT_LENGTH)
 
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
-
-        method = 'pbkdf2:sha1:' + str(HASH_ITERATIONS)
-        self.password_hash = generate_password_hash(password, method=method, salt_length=SALT_LENGTH)
+        self.password = password
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def generate_confirmation_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    def reset_password(self, token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('reset') != self.id:
+            return False
+        self.password = new_password
+        db.session.add(self)
+        return True
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)

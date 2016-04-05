@@ -1,10 +1,13 @@
+# Generic Python-generated files and directories
 *.pyc
+__pycache__/
 
 # Virtual environment
 venv/
 
-instance/
-
-__pycache__/
-
+# SQLite databases
 *.sqlite
+
+# This file contains sensitive information, like account
+# credentials. Do not let it get into source control.
+.env

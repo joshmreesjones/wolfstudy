@@ -8,11 +8,11 @@
     <meta name="description" content="">
 
     <!-- CSS -->
-    <link href="/static/css/normalize.css" rel="stylesheet">
-    <link href="/static/css/main.css" rel="stylesheet">
+    <!--<link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">-->
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
 
     <!-- JavaScript -->
-    <script src="/static/js/main.js" async></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" async></script>
 {% endblock %}
 
 {% block navbar %}
@@ -34,19 +34,32 @@
 
             <!-- Things to be collapsed in the header -->
             <div class="collapse navbar-collapse" id="header-collapse-content">
-                {% if session.logged_in %}
-                    <p class="navbar-text">Logged in as {{ session.username }}</p>
+                {% if current_user.is_authenticated %}
+                    <p class="navbar-text">Logged in as {{ current_user.username }}</p>
                 {% endif %}
 
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/ask/">Ask</a></li>
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li><a href="{{ url_for('main.ask_question') }}">Ask</a></li>
 
-                    {% if session.logged_in %}
-                        <li><a href="/logout/">Log out</a></li>
+                    {% if current_user.is_authenticated %}
+                        <li class="dropdown">
+                            <a class="dropdown-toggle"
+                                       data-toggle="dropdown"
+                                       role="button"
+                                       aria-haspopup="true"
+                                       aria-expanded="false">
+                                {{ current_user.username }} <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url_for('main.show_user', username=current_user.username) }}">Profile</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="{{ url_for('auth.logout') }}">Log out</a></li>
+                            </ul>
+                        </li>
                     {% else %}
-                        <li><a href="/login/">Log in</a></li>
-                        <li><a href="/register/">Register</a></li>
+                        <li><a href="{{ url_for('auth.login') }}">Log in</a></li>
+                        <li><a href="{{ url_for('auth.register') }}">Register</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -56,11 +69,11 @@
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <div class="container">
-                <ul class="flashes">
-                    {% for message in messages %}
-                        <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
+                {% for message in messages %}
+                    <div class="alert alert-info">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
