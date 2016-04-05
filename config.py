@@ -25,6 +25,12 @@ class DevelopmentConfig(Config):
 
     MAIL_DEBUG = True
 
+    @classmethod
+    def init_app(app):
+        import logging, sys
+        app.logger.addHandler(logging.StreamHandler(sys.stdout))
+        app.logger.setLevel(logging.CRITICAL) # Handle all errors
+
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
