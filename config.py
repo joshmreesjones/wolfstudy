@@ -20,14 +20,21 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
-    DATABASE = os.path.join(basedir, 'wolfstudy-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
     MAIL_DEBUG = True
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data.sqlite')
-    DATABASE = os.path.join(basedir, 'wolfstudy.sqlite')
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+
+    @classmethod
+    def init_app(self, app):
+        import logging, sys
+        app.logger.addHandler(logging.StreamHandler(sys.stdout))
+        app.logger.setLevel(logging.CRITICAL) # Handle all errors
 
 config = {
     'development': DevelopmentConfig,
