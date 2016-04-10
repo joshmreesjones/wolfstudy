@@ -11,3 +11,6 @@ venv/
 # This file contains sensitive information, like account
 # credentials. Do not let it get into source control.
 .env
+
+# This directory contains code coverage reports. No need to track that.
+tmp/
