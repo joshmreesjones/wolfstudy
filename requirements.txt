@@ -1,3 +1,4 @@
+coverage==4.1b2
 Flask==0.10.1
 Flask-Bootstrap==3.3.5.7
 Flask-Login==0.3.2

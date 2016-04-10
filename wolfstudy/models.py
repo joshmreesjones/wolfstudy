@@ -55,11 +55,6 @@ class User(UserMixin, db.Model):
         method = 'pbkdf2:sha1:' + str(HASH_ITERATIONS)
         self.password_hash = generate_password_hash(password, method=method, salt_length=SALT_LENGTH)
 
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
-
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 

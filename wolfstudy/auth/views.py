@@ -20,7 +20,8 @@ def register():
         email = form.email.data
         username = form.username.data
         password = form.password.data 
-        new_user = User(username, email, password)
+
+        new_user = User(username=username, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
 
