@@ -47,7 +47,7 @@
 
                     {% if current_user.is_authenticated %}
                         <li class="dropdown">
-                            <a class="dropdown-toggle"
+                            <a href="#" class="dropdown-toggle"
                                        data-toggle="dropdown"
                                        role="button"
                                        aria-haspopup="true"
@@ -73,7 +73,11 @@
         {% if messages %}
             <div class="container">
                 {% for message in messages %}
-                    <div class="alert alert-info">
+                    <div class="alert alert-info alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
                         <p>{{ message }}</p>
                     </div>
                 {% endfor %}
@@ -87,5 +91,9 @@
 {% endblock %}
 
 {% block scripts %}
+    <!-- This JavaScript must be loaded before Flask-Bootstrap
+         loads Bootstrap CSS and jQuery in the call to super() below. -->
+    <script src="/static/js/bootstrap.min.js"></script>
+
     {{ super() }}
 {% endblock %}
