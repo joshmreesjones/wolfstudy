@@ -1,5 +1,5 @@
 from flask import flash, redirect, render_template, session, url_for
-from flask.ext.login import login_required
+from flask.ext.login import current_user, login_required
 from . import main
 from .. import db
 from .forms import AnswerQuestionForm, AskQuestionForm
@@ -24,7 +24,7 @@ def answer_question(question_id):
     if form.validate_on_submit():
         question = Question.query.filter_by(id=question_id).first_or_404()
         content = form.content.data
-        new_answer = Answer(content, question)
+        new_answer = Answer(content=content, question_id=question.id)
 
         db.session.add(new_answer)
         db.session.commit()
@@ -40,7 +40,7 @@ def answer_question(question_id):
 def ask_question():
     form = AskQuestionForm()
     if form.validate_on_submit():
-        new_question = Question(form.title.data, form.content.data)
+        new_question = Question(title=form.title.data, content=form.content.data, author_id=current_user.id)
         db.session.add(new_question)
         db.session.commit()
         return redirect(url_for('.get_question', question_id=new_question.id))

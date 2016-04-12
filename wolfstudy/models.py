@@ -18,12 +18,9 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(MAX_QUESTION_TITLE_LENGTH))
     content = db.Column(db.Text)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
-
-    def __init__(self, title, content):
-        self.title = title
-        self.content = content
 
 class Answer(db.Model):
     __tablename__ = 'answers'
@@ -31,11 +28,6 @@ class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text)
     question_id = db.Column(db.Integer, db.ForeignKey('questions.id'))
-
-    def __init__(self, content, question):
-        self.content = content
-        self.question_id = question.id
-        self.question = question
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -45,6 +37,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(MAX_EMAIL_LENGTH), unique=True)
     password_hash = db.Column(db.String(HASH_LENGTH))
     confirmed = db.Column(db.Boolean, default=False)
+
+    questions = db.relationship('Question', backref='author', lazy='dynamic')
 
     @property
     def password(self):
