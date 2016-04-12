@@ -2,24 +2,33 @@
 {% import "bootstrap/wtf.html" as wtf %}
 
 {% block page_content %}
-    <h2>{{ question.title }}</h2>
+    <div class="row">
+        <div class="col-sm-4 col-sm-push-8">
+            <p>Author: <a href="{{ url_for('main.show_user', username=question.author.username) }}">{{ question.author.username }}</a></p>
+        </div>
 
-    <p>{{ question.content }}</p>
+        <div class="col-sm-8 col-sm-pull-4">
+            <h2>{{ question.title }}</h2>
 
-    <hr>
+            <p>{{ question.content }}</p>
 
-    <h2>Answers:</h2>
 
-    {% for answer in answers %}
-        <p>{{ answer.content }}</p>
-    {% endfor %}
+            <hr>
 
-    <hr>
+            <h2>Answers:</h2>
 
-    {% if current_user.is_authenticated %}
-        {% set action %}{{ url_for('main.answer_question', question_id=question.id) }}{% endset %}
-        {{ wtf.quick_form(form, action=action) }}
-    {% else %}
-        <p><a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to answer this question.</p>
-    {% endif %}
+            {% for answer in answers %}
+                <p>{{ answer.content }}</p>
+            {% endfor %}
+
+            <hr>
+
+            {% if current_user.is_authenticated %}
+                {% set action %}{{ url_for('main.answer_question', question_id=question.id) }}{% endset %}
+                {{ wtf.quick_form(form, action=action) }}
+            {% else %}
+                <p><a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.register') }}">register</a> to answer this question.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
