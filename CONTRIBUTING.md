@@ -8,11 +8,11 @@ This document tells you how to get started contributing to the project - how to 
 About the application
 ---------------------
 
-Language: Python
-Web framework: Flask, with lots of plugins
-Deployment platform: Heroku
-Mail: Google Mail
-Database ORM: SQLAlchemy
+- Language: Python
+- Web framework: Flask, with lots of plugins
+- Deployment platform: Heroku
+- Mail: Google Mail
+- Database ORM: SQLAlchemy
 
 
 
@@ -56,7 +56,7 @@ Using `manage.py`, you can run the application, test the code, work with the dat
 
 To use commands from `manage.py`, use the format:
 
-`python2 manage.py <command>`
+    python2 manage.py <command>
 
 Commands:
 - `python2 manage.py runserver` - runs the web server locally at `localhost:5000`
@@ -88,4 +88,4 @@ How to generate a secret key
 
 I'm not sure where else to put this.
 
-`head -c 24 /dev/urandom > secret_key.txt`
+    head -c 24 /dev/urandom > secret_key.txt
