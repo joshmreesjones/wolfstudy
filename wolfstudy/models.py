@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import current_app
 from flask.ext.login import UserMixin
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -19,6 +20,7 @@ class Question(db.Model):
     title = db.Column(db.String(MAX_QUESTION_TITLE_LENGTH))
     content = db.Column(db.Text)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
