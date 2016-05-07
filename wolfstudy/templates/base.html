@@ -1,26 +1,50 @@
 {% extends "bootstrap/base.html" %}
 
+
+
 {% block title %}WolfStudy{% endblock %}
+
+
 
 {% block head %}
     {{ super() }}
 
     <meta name="description" content="">
 
-    <!-- CSS -->
-    <!--<link href="{{ url_for('static', filename='css/normalize.css') }}" rel="stylesheet">-->
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-
-    <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}" async></script>
     <script type="text/javascript" async
         src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
     </script>
 {% endblock %}
 
+
+
+{% block styles %}
+    {{ super() }}
+
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+{% endblock %}
+
+
+
+{% block scripts %}
+    <!-- This JavaScript must be loaded before Flask-Bootstrap
+         loads Bootstrap CSS and jQuery in the call to super() below. -->
+    <!--<script src="/static/js/bootstrap.min.js"></script>--> 
+
+    {{ super() }}
+
+    {{ moment.include_moment() }}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}" async></script>
+{% endblock %}
+
+
+
 {% block navbar %}
     {{ super() }}
 {% endblock %}
+
+
 
 {% block content %}
     <nav class="navbar navbar-inverse navbar-static-top">
@@ -88,14 +112,4 @@
     <div class="container">
         {% block page_content %}{% endblock %}
     </div>
-{% endblock %}
-
-{% block scripts %}
-    <!-- This JavaScript must be loaded before Flask-Bootstrap
-         loads Bootstrap CSS and jQuery in the call to super() below. -->
-    <script src="/static/js/bootstrap.min.js"></script>
-
-    {{ super() }}
-
-    {{ moment.include_moment() }}
 {% endblock %}

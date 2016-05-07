@@ -1,0 +1,22 @@
+.tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.tag a {
+    cursor: pointer;
+    color: #ffffff;
+    margin-left: 4px;
+    font-size: 85%;
+}
+
+.tag a:hover {
+    color: #eeeeee;
+}
+
+#tags-container {
+    margin-bottom: 15px;
+    height: 25px;
+}
