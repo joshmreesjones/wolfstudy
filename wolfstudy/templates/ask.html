@@ -4,34 +4,30 @@
 {% block page_content %}
     <h2>Ask a question</h2>
 
-    <!--
-    {{ wtf.quick_form(form) }}
-    -->
+    <form id="ask-question-form" method="post" action="{{ url_for('main.ask_question') }}" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
 
-    <form id="ask-question-form" method="post" action="{{ url_for('main.ask_question') }}">
-        <div class="form-group">
-            <label for="title">Title</label>
-            <input class="form-control" type="text" id="title" placeholder="Question title">
-        </div>
+        {{ wtf.form_field(form.title) }}
+        {{ wtf.form_field(form.content) }}
 
         <div class="form-group">
-            <label for="content">Content</label>
-            <textarea class="form-control" id="content" placeholder="Ask your question"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="tags">Tags</label>
+            <label for="add-tag-input">Tags</label>
 
             <div class="input-group">
-                <input class="form-control" type="text" id="add-tag-input" placeholder="Add tags">
+                <input type="text" id="add-tag-input" class="form-control">
+
                 <span class="input-group-btn">
                     <button id="add-tag-button" class="btn btn-default" type="button">Add</button>
                 </span>
             </div>
         </div>
 
+
         <div id="tags-container"></div>
 
-        <button class="btn btn-default" type="submit">Submit question</button>
+        <input type="hidden" id="tags" name="tags" value="">
+
+        <input class="btn btn-default" id="submit-button" name="submit-button" type="submit" value="Submit">
     </form>
 {% endblock %}

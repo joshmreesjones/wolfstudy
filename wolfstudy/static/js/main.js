@@ -94,6 +94,11 @@ var TagManager = (function($) {
         }
     }
 
+    var prepareTagsForSubmit = function() {
+        var tags = serialize();
+        $("#tags").val(tags.join(","));
+    }
+
     var serialize = function() {
         var tags = [];
 
@@ -117,8 +122,7 @@ var TagManager = (function($) {
                 }
             });
 
-            $("#ask-question-form").on("submit", function(e) {
-            });
+            $("#ask-question-form").on("submit", prepareTagsForSubmit);
         }
     }
 })(jQuery);
