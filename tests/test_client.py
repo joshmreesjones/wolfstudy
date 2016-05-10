@@ -1,7 +1,7 @@
 import unittest
 from flask import url_for
 from wolfstudy import create_app, db
-from wolfstudy.models import Question, User
+from wolfstudy.models import Question, Tag, User
 
 class FlaskClientTestCase(unittest.TestCase):
     def setUp(self):
@@ -50,6 +50,11 @@ class FlaskClientTestCase(unittest.TestCase):
 
     def test_get_question(self):
         q = Question(title='test_get_question title', content='test_get_question content')
+
+        q.tags.append(Tag(tag_name='tag1'))
+        q.tags.append(Tag(tag_name='tag2'))
+        q.tags.append(Tag(tag_name='tag3'))
+
         db.session.add(q)
         db.session.commit()
 
@@ -57,11 +62,14 @@ class FlaskClientTestCase(unittest.TestCase):
         response = self.client.get(url_for('main.get_question', question_id=q.id))
         self.assertTrue('test_get_question title' in response.data)
         self.assertTrue('test_get_question content' in response.data)
+        self.assertTrue('tag1' in response.data)
+        self.assertTrue('tag2' in response.data)
+        self.assertTrue('tag3' in response.data)
 
         # We're not logged in, so make sure we can't answer the question
         self.assertTrue('to answer this question' in response.data)
-        # Log in or      ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
-        #       register to answer this question.
+        # "Log in or     ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^ ^
+        #       register to answer this question."
 
         # Make a user and log in
         u = User(username='person', password='cat')
