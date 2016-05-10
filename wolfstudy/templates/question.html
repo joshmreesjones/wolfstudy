@@ -7,6 +7,14 @@
         <div class="col-sm-4 col-sm-push-8">
             <p>Author: <a href="{{ url_for('main.show_user', username=question.author.username) }}">{{ question.author.username }}</a></p>
             <p>Asked: {{ moment(question.timestamp).fromNow(refresh=True) }}</p>
+            <p>Tags:</p>
+            <div id="tags-container">
+                {% for tag in question.tags %}
+                    <div class="tag bg-primary">
+                        <span class="tag-text">{{ tag.tag_name }}</span>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Question title and content -->

@@ -43,7 +43,10 @@ def ask_question():
         new_question = Question(title=form.title.data, content=form.content.data, author_id=current_user.id)
 
         for tag in form.tags.data:
-            if not Tag.query.filter_by(tag_name=tag).first():
+            existing_tag = Tag.query.filter_by(tag_name=tag).first()
+            if existing_tag:
+                new_question.tags.append(existing_tag)
+            else:
                 new_question.tags.append(Tag(tag_name=tag))
 
         db.session.add(new_question)
