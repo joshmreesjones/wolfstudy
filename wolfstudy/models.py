@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from . import db, login_manager
 
 MAX_QUESTION_TITLE_LENGTH = 200
+MAX_TAG_NAME_LENGTH = 20
 MAX_USERNAME_LENGTH = 30
 MAX_EMAIL_LENGTH = 320
 
@@ -23,6 +24,18 @@ class Question(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
+    tags = db.relationship('Tag', secondary='tags_questions', backref=db.backref('questions', lazy='dynamic'))
+
+class Tag(db.Model):
+    __tablename__ = 'tags'
+
+    id = db.Column(db.Integer, primary_key=True)
+    tag_name = db.Column(db.String(MAX_TAG_NAME_LENGTH), unique=True, nullable=False)
+
+tags_questions = db.Table('tags_questions',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'), nullable=False),
+    db.Column('question_id', db.Integer, db.ForeignKey('questions.id'), nullable=False)
+)
 
 class Answer(db.Model):
     __tablename__ = 'answers'

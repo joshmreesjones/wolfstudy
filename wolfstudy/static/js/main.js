@@ -5,12 +5,28 @@ var TagManager = (function($) {
         // - zero or more of:
         //     - single dash
         //     - one or more alphanumeric characters
+        // - length 1 - 20
         // 
         // Valid:
         //     tag    tag123    tag-name     tag-with-multiple-words
         // Invalid:
         //     -tag    tag-    tag--name    t@g
-        return /^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(text);
+
+        if (text.length == 0) {
+            showPopupMessage("You didn't enter anything.");
+            return false;
+        } else if (text.length > 20) {
+            showPopupMessage("Tag must be 20 characters or less.");
+            return false;
+        } else if (!/^[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*$/.test(text)) {
+            showPopupMessage("Please don't use weird characters.");
+            return false;
+        } else if (tagExists(text)) {
+            showPopupMessage("You've already added this tag.");
+            return false;
+        }
+
+        return true;
     }
 
     var showPopupMessage = function(message) {
@@ -55,12 +71,6 @@ var TagManager = (function($) {
         var tagText = tagInput.val();
 
         if (isValidTagName(tagText)) {
-            // Check for duplicate tags
-            if (tagExists(tagText)) {
-                showPopupMessage("Please do not add a duplicate tag.");
-                return;
-            }
-
             // Make a tag div:
             // <div class="tag bg-primary">
             //     <span class="tag-text">tagtext</span>

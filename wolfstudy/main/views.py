@@ -3,7 +3,7 @@ from flask.ext.login import current_user, login_required
 from . import main
 from .. import db
 from .forms import AnswerQuestionForm, AskQuestionForm
-from ..models import Answer, Question, User
+from ..models import Answer, Question, Tag, User
 
 @main.route('/')
 def index():
@@ -41,8 +41,14 @@ def ask_question():
     form = AskQuestionForm()
     if form.validate_on_submit():
         new_question = Question(title=form.title.data, content=form.content.data, author_id=current_user.id)
+
+        for tag in form.tags.data:
+            if not Tag.query.filter_by(tag_name=tag).first():
+                new_question.tags.append(Tag(tag_name=tag))
+
         db.session.add(new_question)
         db.session.commit()
+
         return redirect(url_for('.get_question', question_id=new_question.id))
     else:
         return render_template('ask.html', form=form)
