@@ -49,7 +49,11 @@ class FlaskClientTestCase(unittest.TestCase):
         self.assertTrue('Logged in as person' in response.data)
 
     def test_get_question(self):
-        q = Question(title='test_get_question title', content='test_get_question content')
+        # Make a fake user to ask the question
+        user_author = User(username='question_author', password='cat')
+        db.session.add(user_author)
+        db.session.commit()
+        q = Question(title='test_get_question title', content='test_get_question content', author_id=user_author.id)
 
         q.tags.append(Tag(tag_name='tag1'))
         q.tags.append(Tag(tag_name='tag2'))
@@ -62,6 +66,7 @@ class FlaskClientTestCase(unittest.TestCase):
         response = self.client.get(url_for('main.get_question', question_id=q.id))
         self.assertTrue('test_get_question title' in response.data)
         self.assertTrue('test_get_question content' in response.data)
+        self.assertTrue('question_author' in response.data)
         self.assertTrue('tag1' in response.data)
         self.assertTrue('tag2' in response.data)
         self.assertTrue('tag3' in response.data)
